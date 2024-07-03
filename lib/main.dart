@@ -12,37 +12,46 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  List<int> numbers = [];
-
-  void onClicked() {
-    // State에게 새로운 데이터가 있다고 알려줌, 그래서 State가 반응해서 새로고침함.
-    setState(() {
-      numbers.add(numbers.length);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        backgroundColor: const Color(0xfff4eddb),
+      theme: ThemeData(
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(
+            color: Colors.red,
+          ),
+        ),
+      ),
+      home: const Scaffold(
+        backgroundColor: Color(0xfff4eddb),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'Click Count',
-                style: TextStyle(fontSize: 30),
-              ),
-              for (var n in numbers) Text('$n'),
-              IconButton(
-                iconSize: 40,
-                onPressed: onClicked,
-                icon: const Icon(Icons.add_box_rounded),
-              ),
+              MyLargeTitle(),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class MyLargeTitle extends StatelessWidget {
+  const MyLargeTitle({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      'My Large Title',
+      style: TextStyle(
+        fontSize: 30,
+        color: Theme.of(context)
+            .textTheme
+            .titleLarge!
+            .color, // !는 명확핟하게 있다는 것을 알려주기 위함. ?는 있으면 쓰라는 뜻(maybe)
       ),
     );
   }
