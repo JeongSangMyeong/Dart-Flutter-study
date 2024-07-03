@@ -15,7 +15,10 @@ class _AppState extends State<App> {
   int counter = 0;
 
   void onClicked() {
-    counter++;
+    // State에게 새로운 데이터가 있다고 알려줌, 그래서 State가 반응해서 새로고침함.
+    setState(() {
+      counter++;
+    });
   }
 
   @override
