@@ -39,28 +39,32 @@ class Webtoon extends StatelessWidget {
       },
       child: Column(
         children: [
-          Container(
-            width: 250,
-            // 아래 설정해야 List에 border가 입혀짐
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 15,
-                  offset: const Offset(10, 10),
-                  color: Colors.black.withOpacity(0.5),
-                ),
-              ],
-            ),
-            child: Image.network(
-              thumb,
-              // 헤더 이슈때문에 넣어야 정상적으로 호출됨.
-              headers: const {
-                'User-Agent':
-                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
-                'Referer': 'https://comic.naver.com',
-              },
+          // Hero 메인 리스트에 있는 이미지와 상세 이미지의 태그를 같게 하면, 상세 이미지가 새로 생성되는 것이 아닌 메인 이미지가 움직이는 모션을 취할 수 있음.
+          Hero(
+            tag: id,
+            child: Container(
+              width: 250,
+              // 아래 설정해야 List에 border가 입혀짐
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 15,
+                    offset: const Offset(10, 10),
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                ],
+              ),
+              child: Image.network(
+                thumb,
+                // 헤더 이슈때문에 넣어야 정상적으로 호출됨.
+                headers: const {
+                  'User-Agent':
+                      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
+                  'Referer': 'https://comic.naver.com',
+                },
+              ),
             ),
           ),
           const SizedBox(
