@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webtoon_app/models/webtoon_model.dart';
 import 'package:webtoon_app/services/api_service.dart';
+import 'package:webtoon_app/widgets/webtoon_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -60,42 +61,11 @@ class HomeScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         print(index);
         var webtoon = snapshot.data![index];
-        return Column(
-          children: [
-            Container(
-              width: 250,
-              // 아래 설정해야 List에 border가 입혀짐
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 15,
-                    offset: const Offset(10, 10),
-                    color: Colors.black.withOpacity(0.5),
-                  ),
-                ],
-              ),
-              child: Image.network(
-                webtoon.thumb,
-                // 헤더 이슈때문에 넣어야 정상적으로 호출됨.
-                headers: const {
-                  'User-Agent':
-                      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
-                  'Referer': 'https://comic.naver.com',
-                },
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              webtoon.title,
-              style: const TextStyle(
-                fontSize: 18,
-              ),
-            ),
-          ],
+        // 웹툰을 컴포넌트로 분리
+        return Webtoon(
+          title: webtoon.title,
+          thumb: webtoon.thumb,
+          id: webtoon.id,
         );
       },
       // widget 리턴하는 함수, 그리고 그 widget은 리스트 아이템 사이에 렌더링 될 것임.
