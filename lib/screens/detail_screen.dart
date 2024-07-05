@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:webtoon_app/models/webtoon_detail_model.dart';
+import 'package:webtoon_app/models/webtoon_episode_model.dart';
+import 'package:webtoon_app/services/api_service.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
   final String title, thumb, id;
 
   const DetailScreen({
@@ -9,6 +12,23 @@ class DetailScreen extends StatelessWidget {
     required this.thumb,
     required this.id,
   });
+
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  // widget.으로 접근할 수 없음. (StatefulWidget)
+  late Future<WebtoonDetailModel> webtoon;
+  late Future<List<WebtoonEpisodeModel>> episodes;
+
+  // 그래서 initState로 widget에 접근함
+  @override
+  void initState() {
+    super.initState();
+    webtoon = ApiService.getToonById(widget.id);
+    episodes = ApiService.getLatestEpisodeById(widget.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +40,8 @@ class DetailScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         foregroundColor: Colors.green,
         title: Text(
-          title,
+          // widget.은 부모한테 가라는 의미. build 메소드의 State가 속한 StatefulWidget의 data를 받아오는 방법. DetailScreen에 접근함
+          widget.title,
           style: const TextStyle(
             fontSize: 24,
           ),
@@ -35,7 +56,7 @@ class DetailScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Hero(
-                tag: id,
+                tag: widget.id,
                 child: Container(
                   width: 250,
                   // 아래 설정해야 List에 border가 입혀짐
@@ -51,7 +72,7 @@ class DetailScreen extends StatelessWidget {
                     ],
                   ),
                   child: Image.network(
-                    thumb,
+                    widget.thumb,
                     // 헤더 이슈때문에 넣어야 정상적으로 호출됨.
                     headers: const {
                       'User-Agent':
