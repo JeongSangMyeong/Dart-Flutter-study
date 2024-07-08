@@ -8,10 +8,10 @@ Dart와 Flutter를 공부한 내용을 기록하는 저장소입니다.
 ### Dart의 컴파일러
 
 1. dart web
-   - dart2는 코드를 javascript로 변환해주는 컴파일러
+   - dart는 코드를 javascript로 변환해주는 컴파일러
 
 2. dart native(machine code JIT and AOT)
-   - dart2는 쓴 코드를 여러 CPU의 아키텍처에 맞게 변환해주는 컴파일러
+   - dart는 쓴 코드를 여러 CPU의 아키텍처에 맞게 변환해주는 컴파일러
    - 따라서 iOS, Android, Windows, Linux, Mac 등으로 컴파일 O
 
    - JIT (just-in-time)
