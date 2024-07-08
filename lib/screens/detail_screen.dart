@@ -59,7 +59,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 tag: widget.id,
                 child: Container(
                   width: 250,
-                  // 아래 설정해야 List에 border가 입혀짐
+                  // 아래 설정해야 border가 입혀짐
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
@@ -83,6 +83,45 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
             ],
+          ),
+          const SizedBox(
+            height: 25,
+          ),
+          // FutureBuilder = future 값을 기다리고 데이터가 존재하는지 알려줌.
+          FutureBuilder(
+            future: webtoon,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 50,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 설명
+                      Text(
+                        snapshot.data!.about,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 18,
+                      ),
+                      // 장르 / 연령
+                      Text(
+                        '${snapshot.data!.genre} / ${snapshot.data!.age}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return const Text('...');
+            },
           ),
         ],
       ),

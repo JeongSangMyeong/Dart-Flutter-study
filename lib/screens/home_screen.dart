@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      // future 값을 기다리고 데이터가 존재하는지 알려줌.
+      // FutureBuilder = future 값을 기다리고 데이터가 존재하는지 알려줌.
       body: FutureBuilder(
         future: webtoons,
         builder: (context, snapshot) {
