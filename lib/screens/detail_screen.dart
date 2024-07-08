@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webtoon_app/models/webtoon_detail_model.dart';
 import 'package:webtoon_app/models/webtoon_episode_model.dart';
 import 'package:webtoon_app/services/api_service.dart';
@@ -24,6 +23,26 @@ class _DetailScreenState extends State<DetailScreen> {
   // widget.으로 접근할 수 없음. (StatefulWidget)
   late Future<WebtoonDetailModel> webtoon;
   late Future<List<WebtoonEpisodeModel>> episodes;
+  // https://pub.dev/packages/shared_preferences, 로컬스토리지 비슷한거같음. 핸드폰 영구 저장
+  late SharedPreferences prefs;
+  bool isLiked = false;
+
+  // 사용자의 저장소에 connection 생성 -=> 사용자 저장소 내부 검색해서 String List가 있는지 확인함.
+  Future initPref() async {
+    prefs = await SharedPreferences.getInstance();
+    final likedToons = prefs.getStringList('likedToons');
+    // 핸드폰 저장소에 액세스를 얻고 그리고 likedToons라는 이름의 String List가 있는지 확인하고, 있으면 웹툰 id를 갖고 있는지 확인.
+    if (likedToons != null) {
+      if (likedToons.contains(widget.id)) {
+        // 바로 적용 시켜야함
+        setState(() {
+          isLiked = true;
+        });
+      }
+    } else {
+      await prefs.setStringList('likedToons', []);
+    }
+  }
 
   // 그래서 initState로 widget에 접근함
   @override
@@ -31,6 +50,23 @@ class _DetailScreenState extends State<DetailScreen> {
     super.initState();
     webtoon = ApiService.getToonById(widget.id);
     episodes = ApiService.getLatestEpisodeById(widget.id);
+    initPref();
+  }
+
+  onHeartTap() async {
+    final likedToons = prefs.getStringList('likedToons');
+    if (likedToons != null) {
+      if (isLiked) {
+        likedToons.remove(widget.id);
+      } else {
+        likedToons.add(widget.id);
+      }
+      await prefs.setStringList('likedToons', likedToons);
+      // 있던 없던 isLiked를 반대로 초기화
+      setState(() {
+        isLiked = !isLiked;
+      });
+    }
   }
 
   @override
@@ -42,6 +78,15 @@ class _DetailScreenState extends State<DetailScreen> {
         elevation: 1,
         backgroundColor: Colors.white,
         foregroundColor: Colors.green,
+        actions: [
+          IconButton(
+            onPressed: onHeartTap,
+            icon: Icon(
+              // 하트 아이콘
+              isLiked ? Icons.favorite : Icons.favorite_outline,
+            ),
+          ),
+        ],
         title: Text(
           // widget.은 부모한테 가라는 의미. build 메소드의 State가 속한 StatefulWidget의 data를 받아오는 방법. DetailScreen에 접근함
           widget.title,
